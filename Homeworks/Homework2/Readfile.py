@@ -14,10 +14,10 @@ def Read(filename):
     file.close() #close file
     data = np.genfromtxt(filename, dtype = None, names = True, skip_header = 3) #Create array for all other data values
 
-    #print(data['x'][0])
+    #print(data['x'][2])
     #print(data)
     
-    return data;
+    return data, time, particles;
 filename = "MW_000.txt" #Declare filename for repeated use
 
 Read(filename) #run function
