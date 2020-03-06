@@ -48,11 +48,11 @@ def OrbitCom(galaxy, start, end, n):
 
     return orbit
 
-def MagDiff(Vector1, Vector2): #Calculate Magnitude difference of desired vectors
+def MagDiff(Vector1, Vector2, index1, index2, index3): #Calculate Magnitude difference of desired vectors
     magnitude = np.arange(np.size(Vector1)) #Initialize array for magnitdue calculation
 
     for i in range(np.size(magnitude)): #For loop through all indexes to calculate Magnitude for each index
-        magnitude[i] = np.sqrt((Vector1[i][1] - Vector2[i][1])**2 + (Vector1[i][2] - Vector2[i][2])**2 +(Vector1[i][3] - Vector2[i][3])**2) #Can be adjusted to read in Velocity values instead
+        magnitude[i] = np.sqrt((Vector1[i][index1] - Vector2[i][index1])**2 + (Vector1[i][index2] - Vector2[i][index2])**2 +(Vector1[i][index3] - Vector2[i][index3])**2) 
     return magnitude
 
 
@@ -61,7 +61,7 @@ M33 = np.genfromtxt("Orbit_M33.txt", dtype = None, names = True, skip_header = 0
 MW = np.genfromtxt("Orbit_MW.txt", dtype = None, names = True, skip_header = 0)
 M31 = np.genfromtxt("Orbit_M31.txt", dtype = None, names = True, skip_header = 0)
 
-Diff = MagDiff(M33, M31)
+Diff = MagDiff(M33, M31, 1, 2, 3) #Enter 1-3 for Position values, 4-6 for Velocity values
 
 plt.plot(M31['time'], Diff)
 plt.legend(['M31-M33'])
