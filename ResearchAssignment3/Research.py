@@ -30,7 +30,7 @@ def DensityProfileTime(galaxy, start, end, n, radius):
 
     for i, snapID in enumerate(snapID):
         Profile = MassProfile(galaxy, snapID)
-        Mbulge = Profile.MassEnclosed(3, radius) #Initialize Mass array to be plugged into density
+        Mhalo = Profile.MassEnclosed(1, radius) #Initialize Mass array to be plugged into density
         density[i, 0] = i #Initialize column of ID's
 
         for j in range(np.size(radius)):
