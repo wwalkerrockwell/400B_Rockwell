@@ -15,9 +15,9 @@ def Read(filename):
     data = np.genfromtxt(filename, dtype = None, names = True, skip_header = 3) #Create array for all other data values
 
     index = np.where(data['type'] == 1)
-    print(index)
+    #print(index)
     m = data['m'][index]
-    print(m[5])
+    #print(m[5])
 
     #print(data['x'][2])
     #print(data)

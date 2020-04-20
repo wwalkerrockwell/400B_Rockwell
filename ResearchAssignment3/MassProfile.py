@@ -5,7 +5,7 @@ from astropy.constants import G
 from Readfile import Read
 from array import *
 import matplotlib.pyplot as plt
-from CenterOfMass import CenterOfMass
+from CenterOfMass2 import CenterOfMass2
 
 class MassProfile:
 
@@ -13,7 +13,8 @@ class MassProfile:
         ilbl = '000' + str(snap)
         ilbl = ilbl[-3:]
         self.filename = "%s_"%(galaxy) + ilbl + ".txt"
-
+        self.delta = 0.1 #initialize delta and VolDec
+        self.VolDec = 4
 
         
         self.data, self.time, self.total  = Read(self.filename) #Read in the file and assign desired values
@@ -22,15 +23,17 @@ class MassProfile:
         self.z = self.data['z'] * u.kpc
         self.m = self.data['m']
         self.gname = galaxy
-        print(self.gname)
+        #print(self.gname)
         self.Gravity = G 
         self.Gravity = self.Gravity.to(u.kpc*u.km**2/u.s**2/u.Msun) #convert Gravity to desired units
 
 
   
     def MassEnclosed(self, type, radius):
-        COM = CenterOfMass(self.filename, type) #calculate center of Mass
-        galCOMP = COM.COM_P(0.1)
+        print(self.filename)
+        print("type = ", type)
+        COM = CenterOfMass2(self.filename, type) #calculate center of Mass
+        galCOMP = COM.COM_P(self.VolDec, self.delta)
         
         
         index = np.where(self.data['type'] == type) #Select desired indexes and adjust values
@@ -40,9 +43,8 @@ class MassProfile:
 
         RIndex = np.sqrt(xIndex**2 + yIndex**2 + zIndex**2) #Calculate the distance magnitudes
         mIndex = np.zeros(radius.size) #initialize an array for storing all mass profiles
-
         for i in range(np.size(radius)): #loop through each radius and sum up each total mass profile value
-            index2 = np.where(radius[i] > RIndex)
+            index2 = np.where(radius[i] > RIndex.value)
             mIndex[i] = np.sum(self.m[index][index2])
 
         mIndex *= u.Msun
@@ -89,8 +91,8 @@ class MassProfile:
             M[i] = (Mhalo[i] * (radius[i]**2)) / (a + radius[i])**2 #Mass calculation
             Density[i] = ((M[i]*a) / ((2 * 3.1415 * radius[i]) * (radius[i] + a)**3)) #Density Equation
 
-        print("Hernquist Mass = ", M)
-        return M
+        #print("Hernquist Mass = ", M)
+        return Density
   
 
     def CircularVelocity(self, type, radius):
