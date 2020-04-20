@@ -32,7 +32,6 @@ def DensityProfileTime(galaxy, start, end, n, radius):
         print("i = ", i)
         for j in range(np.size(radius)):
             print("j = ", j)
-            print(Mhalo[i])
             density[i, j] = Mhalo[i, j] / (4/3)*(radius[j]**3) #Calculate density
 
         print("Mhalo = ", Mhalo[i])
