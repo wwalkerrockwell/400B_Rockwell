@@ -105,7 +105,6 @@ class CenterOfMass2:
             # compute the center of mass position using                                                                
             # the particles in the reduced radius
             # write your own code below
-            print("x2 = ", x2)
             XCOM2, YCOM2, ZCOM2 = self.COMdefine(x2, y2, z2, m2)
             # compute the new 3D COM position
             # write your own code below

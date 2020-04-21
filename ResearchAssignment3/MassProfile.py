@@ -13,7 +13,8 @@ class MassProfile:
         ilbl = '000' + str(snap)
         ilbl = ilbl[-3:]
         self.filename = "%s_"%(galaxy) + ilbl + ".txt"
-        self.delta = 0.1 #initialize delta and VolDec
+        self.delta = 3.75
+        5 #initialize delta and VolDec
         self.VolDec = 4
 
         
@@ -30,8 +31,6 @@ class MassProfile:
 
   
     def MassEnclosed(self, type, radius):
-        print(self.filename)
-        print("type = ", type)
         COM = CenterOfMass2(self.filename, type) #calculate center of Mass
         galCOMP = COM.COM_P(self.VolDec, self.delta)
         

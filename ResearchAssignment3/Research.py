@@ -31,7 +31,6 @@ def DensityProfileTime(galaxy, start, end, n, radius):
         Mhalo[i] = Profile.MassEnclosed(1, radius) #Initialize Mass array to be plugged into density
         print("i = ", i)
         for j in range(np.size(radius)):
-            print("j = ", j)
             density[i, j] = Mhalo[i, j] / (4/3)*(radius[j]**3) #Calculate density
 
         print("Mhalo = ", Mhalo[i])
@@ -70,9 +69,21 @@ def HernquistProfile(a, Mhalo, radius):
 
 radius = np.arange(1, 32, 5)
 a = 1 #Scale Factor
-DensityProfileTime("M33", 0, 5, 1, radius)
+#DensityProfileTime("M33", 0, 801, 1, radius)
 
-#Mhalo = data = np.genfromtxt("M33_Density.txt", dtype = None, names = True, skip_header = 0) #Create double array for all masses
+Mhalo = np.genfromtxt("M33_Density3.75.txt", dtype = None, names = True, skip_header = 0) #Create double array for all masses
+time = np.arange(0, 801)
+
+plt.plot(time, Mhalo["Third"], label="R = 11")
+plt.plot(time, Mhalo["Fourth"], label="R = 16")
+plt.plot(time, Mhalo["Fifth"], label="R = 21")
+plt.plot(time, Mhalo["Sixth"], label="R = 26")
+plt.legend()
+
+plt.xlabel("Snapshot")
+plt.ylabel("Density") 
+
+plt.show()
 
 
 
