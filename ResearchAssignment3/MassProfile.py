@@ -13,8 +13,7 @@ class MassProfile:
         ilbl = '000' + str(snap)
         ilbl = ilbl[-3:]
         self.filename = "%s_"%(galaxy) + ilbl + ".txt"
-        self.delta = 3.75
-        5 #initialize delta and VolDec
+        self.delta = 0.1 #initialize delta and VolDec
         self.VolDec = 4
 
         
