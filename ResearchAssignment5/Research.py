@@ -77,7 +77,7 @@ def HernquistDensityProfile(a, Mhalo, radius, start, end, n):
         print(Mhalo[i][0])
         print(Mhalo[i][radius.size])
         HernquistDensity[i, 0] = Mhalo[i][0]
-        HernquistDensity[i, 1:radius.size+1] = HernquistMass(a, Mhalo[i][1:radius.size + 1], radius)
+        HernquistDensity[i][1:radius.size] = HernquistMass(a, Mhalo[i][1:radius.size], radius)
 
     np.savetxt("M33HernquistDensity", density, fmt=['%.2f','%.2f','%.2f','%.2f','%.2f','%.2f','%.2f','%.2f'])
     return
