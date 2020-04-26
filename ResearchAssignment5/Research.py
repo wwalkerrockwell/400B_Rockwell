@@ -19,6 +19,8 @@ from MassProfile import MassProfile
 #Let galaxy be the name 
 #Let start-end be the snapshots, and n be the step interval between them
 #Let radius by an array of radii to be the profile to be passed in for each snapshot
+
+#Use Local Density rather than Mean Density-----------------------------------------------------------------------------------------------
 def DensityProfileTime(galaxy, start, end, n, radius):
     fileout1 = "M33_Density.txt"
     fileout2 = "M33_Mass.txt"
@@ -29,12 +31,15 @@ def DensityProfileTime(galaxy, start, end, n, radius):
     for i, snapID in enumerate(snapID):
         Profile = MassProfile(galaxy, snapID)
         Mhalo[i, 1:radius.size+1], time = Profile.MassEnclosed(1, radius) #Initialize Mass array to be plugged into density
-        print("i = ", i)
+        print("i = ", i) 
         Mhalo[i, 0] = time
         density[i, 0] = time
 
         for j in range(np.size(radius)):       
-            density[i, j + 1] = Mhalo[i, j + 1] / ((4./3.)*3.141592*(radius[j]**3)) * 10e9 #Calculate density
+            if (j != 0):
+                density[i, j + 1] = Mhalo[i, j + 1] / ((4./3.)*3.141592*((radius[j]**3) - (radius[j - 1]**3))) * 10e2 #Calculate local density
+            else:
+                density[i, j + 1] = Mhalo[i, j + 1] / ((4./3.)*3.141592*(radius[j]**3)) * 10e2 #Calculate local density for first index
 
         print("Mhalo = ", Mhalo[i])
         print("Density = ", density[i])
@@ -51,32 +56,42 @@ def DensityProfileTime(galaxy, start, end, n, radius):
 #Make a function that will run HernquistMass for all the snapshots
 #It should compare each row 
 
-def HernquistMass(a, Mhalo, radius):
-    M = np.zeros(radius.size) #initialize arrays
-    Density = np.zeros(radius.size)
-
-    for i in range(np.size(radius)):
-        M[i] = (Mhalo[i] * (radius[i]**2)) / (a + radius[i])**2 #Mass calculation
-        Density[i] = ((M[i]*a) / ((2 * 3.1415 * radius[i]) * (radius[i] + a)**3)) #Density Equation
-
-    print("Hernquist Mass = ", M)
+def HernquistMass(scale, Mhalo, R):
+    # Determine the mass enclosed using Hernquist 1990 Mass profile 
+    # Input:   R   Radius  
+    #         scale   Scale Length  
+    #         Mhalo  Total Halo Mass (Msun)
+    # Returns: Mass in units Msun. 
+    
+        # Hernquist 1990 Mass profile
+    M = Mhalo*R**2/(R+scale)**2
+    Density = (M * scale) / ((2 + 3.1415 * R) * (r + scale)**3)
     return Density
 
-def HernquistProfile(a, Mhalo, radius):
+def HernquistDensityProfile(a, Mhalo, radius, start, end, n):
+    snapID = np.arange(start, end, n)
+    HernquistDensity = np.zeros([snapID.size, radius.size + 1])
+    print(HernquistDensity)
+    
+    for i in range(np.size(Mhalo)):
+        print(Mhalo[i][0])
+        print(Mhalo[i][radius.size])
+        HernquistDensity[i, 0] = Mhalo[i][0]
+        HernquistDensity[i, 1:radius.size+1] = HernquistMass(a, Mhalo[i][1:radius.size + 1], radius)
 
-    for i in range(np.size(Mhalo[i])):
-        HernquistMass(a, Mhalo[i], radius)
-
-
+    np.savetxt("M33HernquistDensity", density, fmt=['%.2f','%.2f','%.2f','%.2f','%.2f','%.2f','%.2f','%.2f'])
     return
 
 radius = np.arange(1, 32, 5)
 a = 1 #Scale Factor
 #DensityProfileTime("M33", 0, 801, 1, radius)
 
-Mhalo = np.genfromtxt("M33_Density.txt", dtype = None, names = True, skip_header = 0) #Create double array for all masses
+Mhalo = np.genfromtxt("M33_Mass_Local.txt", dtype = None, names = True, skip_header = 0) #Create double array for all masses
+HernquistDensityProfile(a, Mhalo, radius, 0, 10, 1)
 print(radius)
 
+
+"""
 plt.plot(Mhalo["Time"], Mhalo["Second"], label="R = 6kpc")
 plt.plot(Mhalo["Time"], Mhalo["Third"], label="R = 11kpc")
 plt.plot(Mhalo["Time"], Mhalo["Fourth"], label="R = 16kpc")
@@ -86,9 +101,10 @@ plt.plot(Mhalo["Time"], Mhalo["Seventh"], label="R = 31kpc")
 plt.legend()
 
 plt.xlabel("Time (Myr)")
-plt.ylabel("Density (10^9 Msun / kpc^3)") 
+plt.ylabel("Density (10^2 Msun / kpc^3)") 
 
 plt.show()
+"""
 
 
 
