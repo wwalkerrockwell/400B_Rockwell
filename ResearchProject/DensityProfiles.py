@@ -44,7 +44,7 @@ def DensityProfile(galaxy, start, end, n, radius):
 #a is scale length, Mhalo is the halo mass, R is the radius.
 def HernquistMass(a, Mhalo, R):
     M = Mhalo*R**2/(R+a)**2
-    Density = (M * a) / ((2 + 3.1415 * R) * (R + a)**3)
+    Density = (M * a) / ((2 + 3.1415 * R) * (R + a)**3) #Density profile
     return Density
 
 def HernquistDensityProfile(a, Mhalo, radius, start, end, n): #Calculate Hernquist density for each snapshot
@@ -60,7 +60,7 @@ def HernquistDensityProfile(a, Mhalo, radius, start, end, n): #Calculate Hernqui
 
 #This function exists so I could look at the mass profiles as well to ensure consistency
 #It uses the same inputs as HernquistDensityProfile
-#Simply change the Hernquist function to return mass instead of density to use this
+#Simply change the HernquistMass function to return mass instead of density to use this
 def HernquistMassProfile(a, Mhalo, radius, start, end, n): 
     snapID = np.arange(start, end, n)
     Mass = np.zeros([snapID.size, radius.size + 1])
@@ -81,29 +81,28 @@ a = 1 #Scale Factor
 #HernquistDensityProfile(a, Mhalo, radius, 0, 801, 1)
 print(radius)
 
-"""
+
 Density = np.genfromtxt("M33_Density_Local.txt", dtype = None, names = True, skip_header = 0) #PLOT DENSITY PROFILES  OVER TIME
-plt.plot(Density["Time"], Density["Second"], label="R = 6kpc") 
-plt.plot(Density["Time"], Density["Third"], label="R = 11kpc")
-plt.plot(Density["Time"], Density["Fourth"], label="R = 16kpc")
-plt.plot(Density["Time"], Density["Fifth"], label="R = 21kpc")
-plt.plot(Density["Time"], Density["Sixth"], label="R = 26kpc")
-plt.plot(Density["Time"], Density["Seventh"], label="R = 31kpc")
-plt.legend()
-plt.semilogy()
-plt.xlabel("Time (Myr)")
-plt.ylabel("Density (10^2 Msun / kpc^3)") 
-plt.show()
-"""
+plt.plot(Density["Time"], Density["Second"] * 10e-2, label="R = 6kpc") 
+plt.plot(Density["Time"], Density["Third"] * 10e-2, label="R = 11kpc")
+plt.plot(Density["Time"], Density["Fourth"] * 10e-2, label="R = 16kpc")
+plt.plot(Density["Time"], Density["Fifth"] * 10e-2, label="R = 21kpc")
+plt.plot(Density["Time"], Density["Sixth"] * 10e-2, label="R = 26kpc")
+plt.plot(Density["Time"], Density["Seventh"] * 10e-2, label="R = 31kpc")
 
 
 
 
 #HernquistDensity = np.genfromtxt("M33HernquistDensity.txt", dtype = None, names = True, skip_header = 0) #PLOT HERNQUIST PROFILES OVER TIME
-#plt.plot(HernquistDensity["Time"], HernquistDensity["Second"], label="R = Hernquist6kpc") 
-#plt.plot(HernquistDensity["Time"], HernquistDensity["Third"], label="R = Hernquist11kpc")
+#plt.plot(HernquistDensity["Time"], HernquistDensity["Second"] * 10e-4 * 7, label="R = Hernquist6kpc") 
+#plt.plot(HernquistDensity["Time"], HernquistDensity["Third"] * 10e-4 * 9, label="R = Hernquist11kpc")
 #plt.plot(HernquistDensity["Time"], HernquistDensity["Fourth"], label="R = Hernquist16kpc")
 #plt.plot(HernquistDensity["Time"], HernquistDensity["Fifth"], label="R = Hernquist21kpc")
+
+plt.legend()
+plt.xlabel("Time (Myr)")
+plt.ylabel("Density (Msun / kpc^3)") 
+plt.show()
 
 
 """
@@ -121,13 +120,13 @@ plt.show()
 """
 
 
-snapshot = 800#Plot critical Density Snapshots with Hernquist Profiles. Change snapshot value to see different snapshots
+snapshot = 000#Plot critical Density Snapshots with Hernquist Profiles. Change snapshot value to see different snapshots
 Density = np.loadtxt("M33_Density_Local.txt", skiprows=1) 
 HernquistDensity = np.loadtxt("M33HernquistDensity.txt", skiprows=1)
-plt.plot(radius, Density[snapshot][1:radius.size+1], label="Density")
-plt.plot(radius, HernquistDensity[snapshot][1:radius.size+1], label="HernquistDensity")
+plt.plot(radius, Density[snapshot][1:radius.size+1] * 10e-2, label="Density")
+plt.plot(radius, HernquistDensity[snapshot][1:radius.size+1] * 10e-4, label="HernquistDensity")
 
-plt.ylabel("Density (10^2 Msun / kpc^3)")
+plt.ylabel("Density ( Msun / kpc^3)")
 plt.xlabel("Radius (kpc)")
 plt.legend()
 plt.semilogy()
